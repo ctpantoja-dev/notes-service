@@ -6,7 +6,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 @Table(name = "notes")
 public class NoteEntity {
@@ -19,36 +29,4 @@ public class NoteEntity {
     private String title;
     @NotNull
     private String body;
-
-    public NoteEntity() {}
-
-    public NoteEntity(int id, String title, String body) {
-        this.id = id;
-        this.title = title;
-        this.body = body;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getId() {
-        return this.id;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public String getBody() {
-        return this.body;
-    }
 }

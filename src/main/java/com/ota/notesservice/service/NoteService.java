@@ -13,11 +13,8 @@ public class NoteService {
 
     private final NoteRepository noteRepository;
 
-    private final NoteMapper noteMapper;
-
-    public NoteService(NoteRepository noteRepository, NoteMapper noteMapper) {
+    public NoteService(NoteRepository noteRepository) {
         this.noteRepository = noteRepository;
-        this.noteMapper = noteMapper;
     }
 
 
@@ -27,13 +24,13 @@ public class NoteService {
 
     public Optional<Note> getNote(int noteId) {
         final Optional<NoteEntity> noteEntityOpt = noteRepository.findById(noteId);
-        return noteEntityOpt.map(noteMapper::entityToDto);
+        return noteEntityOpt.map(this::entityToDto);
     }
 
     public List<Note> getAllNotes() {
         final Iterable<NoteEntity> notesEntityList = noteRepository.findAll();
-        return StreamSupport.stream(notesEntityList.spliterator(), false)
-                .map(noteMapper::entityToDto).toList();
+        return StreamSupport.stream(notesEntityList.spliterator(), false).map(this::entityToDto)
+                .toList();
     }
 
     public void deleteNote(int noteId) {
@@ -41,7 +38,7 @@ public class NoteService {
     }
 
     public void createNote(Note note) {
-        final NoteEntity noteEntity = noteMapper.dtoToEntity(note);
+        final NoteEntity noteEntity = this.dtoToEntity(note);
         noteRepository.save(noteEntity);
     }
 
@@ -53,5 +50,14 @@ public class NoteService {
             entity.setBody(note.getBody());
             noteRepository.save(entity);
         });
+    }
+
+    private NoteEntity dtoToEntity(Note noteDto) {
+        return NoteEntity.builder().title(noteDto.getTitle()).body(noteDto.getBody()).build();
+    }
+
+    private Note entityToDto(NoteEntity noteEntity) {
+        return Note.builder().id(noteEntity.getId()).title(noteEntity.getTitle())
+                .body(noteEntity.getBody()).build();
     }
 }
